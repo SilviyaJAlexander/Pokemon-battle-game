@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LeaderboardPage = () => {
   const [score, setScore] = useState([]);
-  let rank = 1;
-  const showScore = JSON.stringify(score);
+  const [newScore, setNewScore] = useState([]);
+  const navigate = useNavigate();
+  setNewScore;
   useEffect(() => {
     axios
       .get("http://localhost:3000/leaderboard")
@@ -16,6 +18,27 @@ const LeaderboardPage = () => {
       .catch((error) => console.error(error));
   }, []);
 
+  const handeChange = (e) => {
+    setNewScore((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    console.log("input name: " + JSON.stringify(newScore));
+  };
+
+  const handelSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:3000/leaderboard", newScore)
+      .then((res) => {
+        console.log("here is the response: " + res.data);
+        alert("data was successfully saved!");
+        setNewScore([]);
+      })
+      .catch((err) => {
+        console.error("error message: " + err);
+        alert("oops! something went wrong!");
+      });
+    navigate("/");
+  };
+
   return (
     <>
       {
@@ -24,48 +47,68 @@ const LeaderboardPage = () => {
           <p className="text-lg mt-4">
             Check the top players and their scores!
           </p>
-          <div className="flex justify-center">
-            <div className="card  w-56 shadow-xl mb-6 mt-6">
-              {score.map((aScore) => (
-                <div key={crypto.randomUUID()} className=" bg-blue-200">
-                  <div className=" flex justify-between m-5">
-                    {aScore.username}
-                    <div />
-                    {aScore.score}
+          <div className="flex justify-center ">
+            <div className=" bg-blue-200 w-56  m-6 outline-double overflow-y-scroll h-80">
+              <ul className="list-none ">
+                {score.map((aScore) => (
+                  <div key={crypto.randomUUID()} className=" h-11 ">
+                    <li>
+                      <div className=" flex justify-between m-5 ">
+                        {aScore.username}
+                        <div />
+                        {aScore.score}
+                      </div>
+                    </li>
                   </div>
-
-                  <p className="p-5"></p>
-                </div>
-              ))}
+                ))}{" "}
+              </ul>
             </div>
           </div>
-          {/* The button to open modal */}
-          <a href="#my_modal" className="btn  btn-accent">
-            Add Score
-          </a>
 
-          {/* Put this part before </body> tag */}
-          <div className="modal" role="dialog" id="my_modal">
+          <button
+            className="btn"
+            onClick={() => document.getElementById("my_modal_3").showModal()}
+          >
+            Add Score
+          </button>
+          <dialog id="my_modal_3" className="modal">
             <div className="modal-box">
-              <h3 className="text-lg font-bold">Enter a score</h3>
-              <p className="py-4">
+              <form method="dialog" onSubmit={handelSubmit}>
+                {/* if there is a button in form, it will close the modal */}
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                  ✕
+                </button>
+                <br></br>
                 <label className="input input-bordered flex items-center gap-2">
-                  Name
-                  <input type="text" className="grow" placeholder="" />
+                  Player
+                  <input
+                    type="text"
+                    className="grow"
+                    name="username"
+                    onChange={handeChange}
+                    required
+                    placeholder="Type here"
+                  />
                 </label>
                 <br></br>
                 <label className="input input-bordered flex items-center gap-2">
                   Score
-                  <input type="text" className="grow" placeholder="" />
+                  <input
+                    type="number"
+                    className="grow"
+                    name="score"
+                    placeholder="Type here"
+                    onChange={handeChange}
+                    required
+                  />
                 </label>
-              </p>
-              <div className="modal-action">
-                <a href="#" className="btn btn-success">
+                <br></br>
+                <button type="submit" className="btn btn-success">
                   Save
-                </a>
-              </div>
+                </button>
+              </form>
             </div>
-          </div>
+          </dialog>
         </div>
       }
     </>
