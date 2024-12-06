@@ -9,7 +9,7 @@ const Homepage = () => {
   useEffect(() => {
     // Fetch Pokémon data
     axios
-      .get("https://pokeapi.co/api/v2/pokemon?limit=20")
+      .get("https://pokeapi.co/api/v2/pokemon?limit=150")
       .then((response) => {
         // Fetch individual Pokémon details to get images
         const fetchDetails = response.data.results.map((pokemon) =>
