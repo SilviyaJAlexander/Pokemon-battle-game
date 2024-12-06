@@ -75,9 +75,9 @@ const LeaderboardPage = () => {
             <div className="modal-box">
               <form method="dialog" onSubmit={handelSubmit}>
                 {/* if there is a button in form, it will close the modal */}
-                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                {/* <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                   ✕
-                </button>
+                </button> */}
                 <br></br>
                 <label className="input input-bordered flex items-center gap-2">
                   Player
@@ -106,7 +106,7 @@ const LeaderboardPage = () => {
                 <button type="submit" className="btn btn-success">
                   Save
                 </button>
-              </form>
+              </form><span>press Esc to close</span>
             </div>
           </dialog>
         </div>
